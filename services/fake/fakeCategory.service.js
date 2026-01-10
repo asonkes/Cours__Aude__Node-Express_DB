@@ -1,40 +1,25 @@
-/**********************************************/
-/***Réprésente notre fausse base de données ***/ 
-/**********************************************/
+/******************************************************/
+/*** Ici c'est le service des catégories (categories) */
+/******************************************************/
+const { categories } = require('./fakeDb');
 
-const categories = [
-    {
-        id : 1,
-        name : "Administratif",
-        icon : "📃"
-    },
-    {
-        id : 2,
-        name : "Décin",
-        icon : "✏️"
-    },
-]
+const fakeCategoryService = {
 
-const tasks = [
-    { 
-        id : 1,
-        name : "Faire ses impôts",
-        before : "2026-06-01",
-        by : "Joël",
-        to : "Christine",
-        category : 1,
-        isDone : false
+    /** On va récupérer toutes les catégories */
+    find: () => {
+        return categories;
     },
-    {
-        id : 2,
-        name : "Fer une aquarelle de paysage enneigé",
-        before : "2026-01-31",
-        by : "Aude",
-        to : "Aurélien",
-        category : 2,
-        isDone : false
-    },
-]
 
-// Pour exporter deux choses, il faudra exporter un objet avec ces deux éléments
-module.exports = { categories, tasks };
+    /** On la tâche dont l'id correspond à l'id dans l'url */
+    findById: (id) => {
+        return categories.find(category => category.id === id);
+    },
+
+    /** On va ajouter une tâche */
+    /** On raisonne ==> il faut ajouter un élément ==> JS = PUSH() */
+    create: () => {
+
+    }
+}
+
+module.exports = fakeCategoryService;
