@@ -9,7 +9,7 @@ const taskRouter = require('express').Router();
 taskRouter
 .route('/')
 .get(taskController.getAll)
-.post(taskController.create);
+.post(taskController.insert);
 
 /** Routes avec 'id' */
 taskRouter

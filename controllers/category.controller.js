@@ -75,6 +75,9 @@ const  categoryController = {
      * @param {Response} res 
      */
     update: (req, res) => {
+        // TODO : Vérifier si l'id existe sinon 404
+        // TODO : Vérifier que le nouveau nom n'est pas déjà présent dans la DB sinon 409
+        // TODO : Faire la modification
         res.sendStatus(501);
     },
 
@@ -84,6 +87,7 @@ const  categoryController = {
      * @param {Response} res 
      */
     delete: (req, res) => {
+        
         res.sendStatus(501);
     }
 }

@@ -1,9 +1,3 @@
-    1) CategoryService
-
-(Bonus pour l’ajout de la catégorie : Mettre en place une fonction dans le service qui vérifie si la catégorie n’existe pas déjà. L’utiliser dans le contrôleur pour savoir si on peut ajouter la catégorie. Si une catégorie de ce nom existe déjà, envoyer un code 40? trouvez le bon code pour une ressource qui existe déjà dans la base de donnée https://fr.wikipedia.org/wiki/Liste_des_codes_HTTP#4xx_-_Erreur_du_client_HTTP )
-
-    2) Challenge
-
 Pour les tâches :
 
 - finir la fonctionnalité du getByUser. Il vous faudra, dans le service, une fonction qui recherche toutes les tâches de l’utilisateur.

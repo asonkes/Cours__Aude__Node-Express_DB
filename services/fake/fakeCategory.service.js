@@ -56,8 +56,10 @@ const fakeCategoryService = {
 
 module.exports = fakeCategoryService;
 
-
+/**********************************/
 /** Explication create avec map : */
+/**********************************/
+
 // categories.map(category => category.id) // categories = tableau d'objets
 /**
 [

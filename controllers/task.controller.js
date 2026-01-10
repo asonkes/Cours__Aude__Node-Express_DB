@@ -7,7 +7,7 @@ const fakeTaskService = require("../services/fake/fakeTask.service");
 const taskController = {
 
     /**
-     * 
+     * Permet de récupérer toutes les tâches
      * @param {Request} req 
      * @param {Response} res 
      */
@@ -23,7 +23,7 @@ const taskController = {
     },
 
     /**
-     * 
+     * Récuopérer une tâche avec un id spécifique
      * @param {Request} req 
      * @param {Response} res 
      */
@@ -43,11 +43,23 @@ const taskController = {
         res.status(200).json(task);
     },
 
+    /**
+     * Récupérer les tâches d'un user
+     * @param {Request} req 
+     * @param {Response} res 
+     */
     getByUser: (req, res) => {
-        res.sendStatus(501);
+        const userName = req.params.name;
+
+        // version 1 - ce que je vous demandais
+        const tasks = fakeTaskService.findAssignedTo(userName);
+        res.status(200).json(tasks);
+        
+        // version 2 - le pimp
+        // On souhaite afficher les tâches attribuées à l'utilisateur + ses tâches que lui a assigné 
     },
 
-    create: (req, res) => {
+    insert: (req, res) => {
         res.sendStatus(501);
     },
 
