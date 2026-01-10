@@ -36,7 +36,7 @@ const  categoryController = {
         if(!category) {
             res.status(404).json({
                 statusCode: 404,
-                message: "Catégorie non trouvée !"
+                message: `La catégorie ${id} n'existe pas !`
             });
         }
 
@@ -48,14 +48,41 @@ const  categoryController = {
      * @param {Request} req 
      * @param {Response} res 
      */
-    create: (req, res) => {
-        res.sendStatus(501);
+    insert: (req, res) => {
+        const categoryToAdd= req.body;
+
+        /** Si le nom existe déjà en BD ==> erreur */
+        /** Donc si renvoie 'true' */
+        if(fakeCategoryService.nameAlreadyExists(categoryToAdd.name)) {
+            res.status(409).json({
+                statusCode: 409,
+                message: `La catégorie ${categoryToAdd.name} existe déjà !`
+            });
+        }
+
+        /** Si le nom n'existe pas, on peut faire la création */
+        /** On met create car on reprend la méthode dans le service */
+        /** Et on met en paramètre : 'categoryAdd' (la category à ajouter) */
+        const insertedCategory = fakeCategoryService.create(categoryToAdd);
+        /** location ==> on donne l'accès à l'url qui permettra de consulter cette nouvelle donnée */
+        res.location(`/api/categories/${insertedCategory}`);
+        res.status(201).json(insertedCategory);
     }, 
 
+    /**
+     * 
+     * @param {Request} req 
+     * @param {Response} res 
+     */
     update: (req, res) => {
         res.sendStatus(501);
     },
 
+    /**
+     * 
+     * @param {Request} req 
+     * @param {Response} res 
+     */
     delete: (req, res) => {
         res.sendStatus(501);
     }

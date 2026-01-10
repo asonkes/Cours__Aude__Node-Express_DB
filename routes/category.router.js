@@ -9,7 +9,7 @@ const categoryRouter = require('express').Router();
 categoryRouter
 .route('/')
 .get(categoryController.getAll)
-.post(categoryController.create);
+.post(categoryController.insert);
 
 /** Routes avec 'id' */
 categoryRouter
