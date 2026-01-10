@@ -41,6 +41,7 @@ const fakeCategoryService = {
     nameAlreadyExists: (name)  => {
         /** js ==> some */
         /** Permet de savoir si au moins un de mes élément contient 'cet élément' ==> name */
+        /** Pas find ==> car attend juste une réponse : OUI OU NON !!!, pas de tableau etc */
         /** Retourne un booléen avec 'true' ou 'false' */
         return categories.some(category => category.name === name);
     },
