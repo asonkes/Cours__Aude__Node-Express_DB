@@ -2,8 +2,6 @@
 /*** Ici c'est le service des tâches (tasks) */
 /*********************************************/
 
-const { updateStatus } = require('../../controllers/task.controller');
-const { nameAlreadyExists } = require('./fakeCategory.service');
 const { tasks } = require('./fakeDb');
 
 const fakeTaskService = {
