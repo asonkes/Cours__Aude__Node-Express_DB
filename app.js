@@ -8,6 +8,11 @@ const { PORT } = process.env;
 /** Permet avec ce code d'envoyer du json(pour les requêtes 'post' par exemple) */
 server.use(express.json());
 
+const logMiddleware = require('./middlewares/log.middleware');
+/** Utilisation d'un middleware qu'on a fait */
+server.use(logMiddleware());
+
+
 /** On doit importer le router */
 const router = require('./routes');
 /** Et déclarer que l'on utilise celui-ci sur le server */
