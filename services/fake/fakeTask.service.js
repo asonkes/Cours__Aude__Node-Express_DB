@@ -41,7 +41,7 @@ const fakeTaskService = {
         
         if(tasks.length != 0) {
             /** Je dois rajouter à la main un id */
-            let idMax = Math.max(...tasks.map(task => task.id));
+            idMax = Math.max(...tasks.map(task => task.id));
         } else {
             /** Si taille du taille du tableau = 0 */
             /** Cela permet d'éviter que si 0 tâche, id = null */

@@ -1,6 +1,6 @@
-/*****************************************/
-/** Ici on est sur la patie middlewares **/
-/*****************************************/
+/******************************************/
+/** Ici on est sur la partie middlewares **/
+/******************************************/
 
 const {Request, Response} = require('express');
 
@@ -10,7 +10,7 @@ const idValidatorMiddleware = () => {
      * @param {Request} req 
      * @param {Response} res 
     */
-    return(req, res, next) => {
+    return (req, res, next) => {
         /** Récupérer l'id dans la requête */ 
         const id = +req.params.id;
         /** Vérifier si l'id est bien un nombre */

@@ -76,7 +76,7 @@ const  categoryController = {
      */
     update: (req, res) => {
         const id = +req.params.id;
-        const newCatgeoryInfos = req.body;
+        const newCategoryInfos = req.body;
 
         if(!category) {
             res.status(404).json({
@@ -86,7 +86,7 @@ const  categoryController = {
         }
 
         /** Si la catégorie existe */
-        const updatedCategory = fakeCategoryService.update(id, newCatgeoryInfos);
+        const updatedCategory = fakeCategoryService.update(id, newCategoryInfos);
         res.status(200).json(updatedCategory);
     },
 
@@ -96,8 +96,19 @@ const  categoryController = {
      * @param {Response} res 
      */
     delete: (req, res) => {
-        
-        res.sendStatus(501);
+        const id = +req.params.id;
+
+        /** Si on nous renvoie l'id, c'est ok */
+        if(fakeCategoryService.delete(id)) {
+            /** On renvoie '204' ==> 'noContent' */
+            res.sendStatus(204);
+        } else {
+            /** Si ne renvoi pas l'id ==> 404 ==> tâche existe pas */
+            res.status(404).json({
+                StatusCode: 404,
+                message: 'Suppression impossible, la tâche n\'existe pas'
+            });
+        }
     }
 }
 

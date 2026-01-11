@@ -4,13 +4,14 @@
 
 const taskController = require('../controllers/task.controller');
 const idValidatorMiddleware = require('../middlewares/idValidator.middleware');
+const verifyInformations = require('../middlewares/verifyInformations.middleware');
 const taskRouter = require('express').Router();
 
 /** Routes sans besoin 'd'id' */
 taskRouter
 .route('/')
 .get(taskController.getAll)
-.post(taskController.insert);
+.post(verifyInformations(), taskController.insert);
 
 /** Routes avec 'id' */
 taskRouter

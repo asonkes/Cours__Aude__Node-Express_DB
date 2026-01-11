@@ -22,6 +22,7 @@ const fakeCategoryService = {
     create: (category) => {
         /** On doit d'abord vérifier que l'id n'est pas = 0 */
         let idMax;
+        
         if(categories.length != 0) {
             /** Donc ici, on doit trouve id(maximum) dans notre fausse DB */
             idMax = Math.max( ...categories.map(category => category.id)); // Voir exemple plus bas !!!
