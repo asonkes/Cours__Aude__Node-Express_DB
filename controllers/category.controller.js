@@ -75,10 +75,19 @@ const  categoryController = {
      * @param {Response} res 
      */
     update: (req, res) => {
-        // TODO : Vérifier si l'id existe sinon 404
-        // TODO : Vérifier que le nouveau nom n'est pas déjà présent dans la DB sinon 409
-        // TODO : Faire la modification
-        res.sendStatus(501);
+        const id = +req.params.id;
+        const newCatgeoryInfos = req.body;
+
+        if(!category) {
+            res.status(404).json({
+                statusCode: 404,
+                message: `La catégorie que vous essayez de modifier n\'existe pas !`
+            });
+        }
+
+        /** Si la catégorie existe */
+        const updatedCategory = fakeCategoryService.update(id, newCatgeoryInfos);
+        res.status(200).json(updatedCategory);
     },
 
     /**

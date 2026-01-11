@@ -163,13 +163,13 @@ const taskController = {
         if(fakeTaskService.delete(id)) {
             /** On renvoie '204' ==> 'noContent' */
             res.sendStatus(204);
+        } else {
+            /** Si ne renvoi pas l'id ==> 404 ==> tâche existe pas */
+            res.status(404).json({
+                StatusCode: 404,
+                message: 'Suppression impossible, la tâche n\'existe pas'
+            });
         }
-
-        /** Si ne renvoei pas l'id ==> 404 ==> tâche existe pas */
-        res.status(404).json({
-            StatusCode: 404,
-            message: 'Suppression impossible, la tâche n\'existe pas'
-        });
     }
 }
 

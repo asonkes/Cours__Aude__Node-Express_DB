@@ -38,8 +38,19 @@ const fakeTaskService = {
     /** On va ajouter une tâche */
     /** On raisonne ==> il faut ajouter un élément ==> JS = PUSH() */
     create: (task) => {
-        /** Je dois rajouter à la main un id */
-        const idMax = Math.max(...tasks.map(task => task.id));
+        /** On doit d'abord vérifier que l'id n'est pas = 0 */
+        let idMax; 
+        
+        if(tasks.length != 0) {
+            /** Je dois rajouter à la main un id */
+            let idMax = Math.max(...tasks.map(task => task.id));
+        } else {
+            /** Si taille du taille du tableau = 0 */
+            /** Cela permet d'éviter que si 0 tâche, id = null */
+            idMax = 0;
+        }
+
+        /** On rajoute 1, au sinon prendra l'id de la dernière tâche */
         const newId = idMax + 1;
 
         /** On rajoute un 'id' à la tâche que l'on veut ajouter */
@@ -69,7 +80,7 @@ const fakeTaskService = {
         return taskToUpdate;
     },
 
-    /** Ici pour modifier une tâche, on a besoind e son 'id' */
+    /** Ici pour modifier une tâche, on a besoin de son 'id' */
     /** Mais AUSSI de la 'tâche' en elle-même */
     update: (id, task) => {
         /** On va trouver la tâche dont l'id correspond à l'id que l'on aura reçu en paramètre */
@@ -94,7 +105,7 @@ const fakeTaskService = {
         /** 
          * Pour la suppression, on renvoie pas l'élément qui vient d'être supprimé
          * Donc si le findIndex(nous renvoie '-1' ==> c'est que l'élément '6', n'existe pas)
-         */
+        */
         if(index === -1) {
             return false; // Cela indique que la suppression ne s'est pas faite
         }
