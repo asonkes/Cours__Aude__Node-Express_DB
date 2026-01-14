@@ -39,6 +39,8 @@ const bodyValidatorMiddleware = () => {
         }
       }
     }
+
+    next();
   };
 };
 
