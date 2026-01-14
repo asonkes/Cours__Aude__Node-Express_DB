@@ -2,28 +2,31 @@
 /** Ici on se trouve sur la route des tâches */
 /*********************************************/
 
-const taskController = require('../controllers/task.controller');
-const idValidatorMiddleware = require('../middlewares/idValidator.middleware');
-const verifyInformations = require('../middlewares/verifyInformations.middleware');
-const taskRouter = require('express').Router();
+const taskController = require("../controllers/task.controller");
+const idValidatorMiddleware = require("../middlewares/idValidator.middleware");
+const nameValidatorMiddleware = require("../middlewares/nameValidator.middleware");
+
+const taskRouter = require("express").Router();
 
 /** Routes sans besoin 'd'id' */
 taskRouter
-.route('/')
-.get(taskController.getAll)
-.post(verifyInformations(), taskController.insert);
+  .route("/")
+  .get(taskController.getAll)
+  .post(nameValidatorMiddleware(), taskController.insert);
 
 /** Routes avec 'id' */
 taskRouter
-.route('/:id')
-.get(idValidatorMiddleware(), taskController.getById)
-.put(idValidatorMiddleware(), taskController.update)
-.patch(idValidatorMiddleware(), taskController.updateStatus)
-.delete(idValidatorMiddleware(), taskController.delete)
+  .route("/:id")
+  .get(idValidatorMiddleware(), taskController.getById)
+  .put(
+    idValidatorMiddleware(),
+    nameValidatorMiddleware(),
+    taskController.update
+  )
+  .patch(idValidatorMiddleware(), taskController.updateStatus)
+  .delete(idValidatorMiddleware(), taskController.delete);
 
 /** Ici c'est pour récupérer les tâches d'un utilisateur */
-taskRouter
-.route('/user/:name')
-.get(taskController.getByUser);
+taskRouter.route("/user/:name").get(taskController.getByUser);
 
 module.exports = taskRouter;
