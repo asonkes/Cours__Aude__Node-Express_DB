@@ -5,7 +5,6 @@
 const categoryController = require("../controllers/category.controller");
 const categoryRouter = require("express").Router();
 const bodyValidatorMiddleware = require("../middlewares/bodyValidator.middleware");
-const idValidatorMiddleware = require("../middlewares/idValidator.middleware");
 
 /** Routes sans besoin 'd'id' */
 categoryRouter
@@ -16,8 +15,8 @@ categoryRouter
 /** Routes avec 'id' */
 categoryRouter
   .route("/:id")
-  .get(idValidatorMiddleware(), categoryController.getById)
-  .put(idValidatorMiddleware(), categoryController.update)
-  .delete(idValidatorMiddleware(), categoryController.delete);
+  .get(categoryController.getById)
+  .put(bodyValidatorMiddleware(), categoryController.update)
+  .delete(categoryController.delete);
 
 module.exports = categoryRouter;

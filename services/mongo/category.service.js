@@ -15,9 +15,38 @@ const categoryService = {
     }
   },
 
-  findById: async (id) => {},
+  findById: async (id) => {
+    try {
+      /** await car peut prendre du temps pour télécharger */
+      const searchedCategory = await Category.findById(id);
+      return searchedCategory;
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
+  },
+
   create: async (category) => {},
-  nameAlreadyExists: async (name) => {},
+
+  nameAlreadyExists: async (name) => {
+    try {
+      // Trouver dans la DB une catégorie qui possède le nom reçu en 'paramètre'
+      // On veut juste un booléen avec 'true' ou 'false'
+      // findOne attend un FILTRE
+      const searchedCategory = await Category.findOne({ name });
+
+      // Le findOne nous renvoie la catégorie qu'il a trouvé !!!
+      if (searchedCategory) {
+        return true;
+      } else {
+        // Si aucune catégorie n'a été trouvé, catégorie n'existe pas ==> renvoie FAUX
+        return false;
+      }
+    } catch {
+      console.log(err);
+      throw new Error(err);
+    }
+  },
 };
 
 module.exports = categoryService;

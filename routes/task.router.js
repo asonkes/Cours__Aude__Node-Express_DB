@@ -17,14 +17,10 @@ taskRouter
 /** Routes avec 'id' */
 taskRouter
   .route("/:id")
-  .get(idValidatorMiddleware(), taskController.getById)
-  .put(
-    idValidatorMiddleware(),
-    bodyValidatorMiddleware(),
-    taskController.update
-  )
-  .patch(idValidatorMiddleware(), taskController.updateStatus)
-  .delete(idValidatorMiddleware(), taskController.delete);
+  .get(taskController.getById)
+  .put(bodyValidatorMiddleware(), taskController.update)
+  .patch(taskController.updateStatus)
+  .delete(taskController.delete);
 
 /** Ici c'est pour récupérer les tâches d'un utilisateur */
 taskRouter.route("/user/:name").get(taskController.getByUser);

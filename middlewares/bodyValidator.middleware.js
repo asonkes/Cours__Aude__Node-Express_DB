@@ -1,8 +1,7 @@
 /******************************************/
 /** Ici on est sur la partie middlewares **/
 /******************************************/
-
-const { Request, Response } = require("express");
+const offensivesWords = ["Trump", "Elon", "Musk", "Kirk"];
 
 const bodyValidatorMiddleware = () => {
   /**
@@ -12,7 +11,6 @@ const bodyValidatorMiddleware = () => {
   return (req, res, next) => {
     // Si par mégarde, il y a pas de body
     const body = req.body;
-    const offensivesWords = ["Trump", "Elon", "Musk", "Kirk"];
 
     /** S'il y a pas de body */
     if (!body) {
@@ -29,15 +27,25 @@ const bodyValidatorMiddleware = () => {
       // Ici on doit vérifier aussi que la catégorie n'est pas un nombre aussi va planter
       if (typeof valueInField === "string") {
         //On va vérifier s'il y a un mot offensant dedans
-        if (offensivesWords.some((word) => req.body[field]).includes(word)) {
-          res.status(400).json({
-            statusCode: 400,
-            message: `Vous ne pouvez pas mettre n'importe quoi dans ${field}`,
-          });
-          /** ? Je crois que si je mets un res.status().json() dans une boucle,
-           * la requête ne prend pas fin et que le programme veut finir sa boucle.
-           * Si je le force à sortir de la boucle avec un return, là ca marche. */
-          return;
+
+        const valueInField = req.body[field];
+        // si le type de la valeur contenue dans le champs est bien une chaine
+        if (typeof valueInField === "string") {
+          //on va vérifier s'il y a un mot offensant dedans
+          if (
+            offensivesWords.some((word) =>
+              valueInField.toLowerCase().includes(word)
+            )
+          ) {
+            res
+              .status(400)
+              .json({
+                statusCode: 400,
+                message: `Vous ne pouvez pas mettre n'importe quoi dans ${field}`,
+              });
+            // ? Je crois que si je mets un res.status().json() dans une boucle, la requête ne prend pas fin et que le programme veut finir sa boucle. Si je le force à sortir de la boucle avec un return, là ça marche
+            return;
+          }
         }
       }
     }
