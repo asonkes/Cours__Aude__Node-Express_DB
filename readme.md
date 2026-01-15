@@ -543,13 +543,21 @@ Sélectionnez votre fichier insomnia (ou postman), appuyez sur Scan et tada, vot
 
 <hr>
 
-[...incoming...]
+
 
 ## Connecter son API avec une DB
-### Mongoose (MongoDB - NoSQL)
+
+Pour connecter notre API à une base de données, nous allons utiliser un ORM (Object-Relational Mapping) ou ODM (Object-Document Mapping). Il s'agit d'un outil (généralement une librairie) où la connection est facilitée et les requêtes aussi. Cet outil nous permettra aussi très facilement de transformer nos objets js en model de donnée et inversement.
+
 ### Sequelize (Multi - SQL)
+[Sequelize](https://sequelize.org/) est l'ORM le plus utilisé quand on fait du SQL. [TypeOrm](https://typeorm.io/) est son grand frère, prévu si on fait notre API en TypeScript.
+
+### Mongoose (MongoDB - NoSQL)
+[Mongoose](https://mongoosejs.com/) est l'ODM prévu pour travailler avec MongoDB.
 
 <hr>
+
+[...incoming...] 
 
 ## Hasher des données
 
