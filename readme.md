@@ -543,8 +543,6 @@ Sélectionnez votre fichier insomnia (ou postman), appuyez sur Scan et tada, vot
 
 <hr>
 
-
-
 ## Connecter son API avec une DB
 
 Pour connecter notre API à une base de données, nous allons utiliser un ORM (Object-Relational Mapping) ou ODM (Object-Document Mapping). Il s'agit d'un outil (généralement une librairie) où la connection est facilitée et les requêtes aussi. Cet outil nous permettra aussi très facilement de transformer nos objets js en model de donnée et inversement.
@@ -554,6 +552,108 @@ Pour connecter notre API à une base de données, nous allons utiliser un ORM (O
 
 ### Mongoose (MongoDB - NoSQL)
 [Mongoose](https://mongoosejs.com/) est l'ODM prévu pour travailler avec MongoDB.
+
+### Installer mongoose
+Il faudra taper dans la console : 
+```
+npm i mongoose
+```
+Tada c'est installé !
+
+### Établir une connection
+Nous allons faire la connection dans notre application donc dans le fichier app.js.
+```js
+// import mongoose
+const mongoose = require("mongoose");
+// utilisation middleware
+server.use( async (req, res, next) => {
+    try {
+        // on va essayer de se connecter
+        await mongoose.connect('pouet');
+        console.log("💾 Successfully connected to the DB !");
+
+        next(); //si on a réussi à se connecter à la DB, on continue la requête
+
+    } catch(err){
+        
+        // si la connexion échoue, on va écrire le message d'erreur dans la console
+        console.log(`❌ Connection Failed \n[Reason]\n ${err}`);
+
+        res.status(500).json( { statusCode : 500 , message : 'Impossible de se connecter à la base de données'  } ); // on met fin à la requête
+    
+    }
+})
+```
+Nous avons besoin, dans la méthode connect, de mettre l'url nous permettant de se connecter à notre serveur mongo (cluster). 
+> [!IMPORTANT]
+> Nous n'allons **JAMAIS** écrire notre url directement dans le fichier app.js sinon, vos données de connexion se retrouvent en free access sur git pour tout le monde.
+
+Nous allons donc utiliser notre fichier de variables d'environnement.
+
+Dans le fichier .env :
+```
+DB_CONNECTION="mongodb+srv://<UserName>:<Password>@<NomCluster>.mongodb.net/?appName=<NomCluster>"
+```
+
+Dans le app.js :
+```js
+// On récupère la variable d'environnement
+const { PORT, DB_CONNECTION } = process.env;
+// On l'utilise dans notre connexion
+/* code pour la connexion */
+        await mongoose.connect(DB_CONNECTION);
+/* ... */
+
+```
+
+### Créer les modèles de données de notre DB
+Pour cela, on va créer un dossier Models. Nous allons créer un Model pour chaque ressource présente dans notre base de données. Ce modèle nous permettra d'indiquer ce qui est attendu en DB et de déjà mettre quelques règles en place.
+
+Pour créer un model, on créé un fichier _nomRessource.model.js_ :
+```js
+const { Schema, model } = require('mongoose');
+
+// On créé un schema qui va décrire à quoi ressemble une categorie
+// Schema( { description objet }, { options collection } )
+const nomRessourceSchema = new Schema({}, {});
+
+// On va créer un model à partir de ce schema
+// Le premier paramètre et le nom du model, le deuxième, le schéma de ce model
+const NomRessource = model('NomRessource', nomRessourceSchema);
+
+// On exporet le model créé
+module.exports = NomRessource;
+
+```
+
+Dans le schema :
+* dans le premier objet, on dessine à quoi ressemble la ressource 
+    ```js
+    {
+        nomAttribut1 : {
+            type : String,
+            required : true, /*obligatoire */
+            unique : true, /*unique */
+            trim : true /* pour enlever les espaces inutiles s'il y en a */
+        },
+        nomAttribut2 : {
+            type : Boolean,
+            required : true,
+        },
+        /* ... */
+    }
+    ```
+* dans le deuxième objet, on fourni les informations sur la collection 
+    ```js
+    { 
+        /* Nom de la collection dans Mongo */
+        collection : 'NomCollection',
+        /* Pour rajouter la date de création et dernière modif de la ressource */
+        timestamp : true,
+        /* ... */
+    }
+    ```
+
 
 <hr>
 

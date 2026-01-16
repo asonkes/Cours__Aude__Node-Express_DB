@@ -26,7 +26,23 @@ const categoryService = {
     }
   },
 
-  create: async (category) => {},
+  create: async (category) => {
+    try {
+      // Dans category, il y a des informations contenues dans le body
+      // On va créer l'objet à ajouter à partir du model a créé
+      // nom de modèle avec une MAJUSCULE
+      const categoryToAdd = Category(category);
+
+      // On va "sauvegarder" (c'est-à-dire insérer) notre category dans la db
+      await categoryToAdd.save();
+
+      // Si tout s'est bien passé, on renvoie la catégory créée
+      return categoryToAdd;
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
+  },
 
   nameAlreadyExists: async (name) => {
     try {

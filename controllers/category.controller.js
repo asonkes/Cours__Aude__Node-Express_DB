@@ -81,6 +81,11 @@ const categoryController = {
           statusCode: 409,
           message: `La catégorie ${categoryToAdd.name} existe déjà !`,
         });
+      } else {
+        // Si elle n'existe pas, on peut la créer
+        const insertedCategory = await categoryService.create(categoryToAdd);
+        res.location(`/api/categories/${insertedCategory.id}`);
+        res.status(201).json(insertedCategory);
       }
     } catch (err) {
       res.sendStatus(500);
