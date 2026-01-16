@@ -25,7 +25,7 @@ const userSchema = new Schema(
     role: {
       type: String,
       required: true,
-      enum: ["User", "Amin"], // enum permet de donner une liste de châines autorisées, si on encode autre chos e-> erreur
+      enum: ["User", "Admin"], // enum permet de donner une liste de châines autorisées, si on encode autre chos e-> erreur
       default:
         "User" /** default permet de mettre une liste de chaînes autorisées, si on encode autre chose -> erreur */,
     },
@@ -36,6 +36,6 @@ const userSchema = new Schema(
   }
 );
 
-const user = model("Task", userSchema);
+const User = model("User", userSchema);
 
-module.exports = user;
+module.exports = User;

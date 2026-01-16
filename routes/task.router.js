@@ -3,16 +3,12 @@
 /*********************************************/
 
 const taskController = require("../controllers/task.controller");
-const idValidatorMiddleware = require("../middlewares/idValidator.middleware");
 const bodyValidatorMiddleware = require("../middlewares/bodyValidator.middleware");
 
 const taskRouter = require("express").Router();
 
 /** Routes sans besoin 'd'id' */
-taskRouter
-  .route("/")
-  .get(taskController.getAll)
-  .post(bodyValidatorMiddleware(), taskController.insert);
+taskRouter.route("/").get(taskController.getAll).post(taskController.insert);
 
 /** Routes avec 'id' */
 taskRouter

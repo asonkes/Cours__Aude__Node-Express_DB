@@ -1,6 +1,6 @@
 const { Schema, model, Types } = require("mongoose");
-const category = require("./category.model");
-const user = require("./user.model");
+const Category = require("./category.model");
+const User = require("./user.model");
 
 const taskSchema = new Schema(
   {
@@ -16,22 +16,23 @@ const taskSchema = new Schema(
     },
     before: {
       type: String,
-      /** required : false ==> donc on le met pas */
+      /* ne pas mettre required = required false */
     },
-    categoryid: {
-      type: Types.ObjectId, // Pour préciser que c'est un type ObjectId, on doit importer Types,
-      // Qui contient toutes les types un peu spéciaux
-      ref: category, // Pour créer une référence vers le model
+    categoryId: {
+      type: Types.ObjectId,
+      /* Pour préciser que c'est un type ObjectId on doit importer Types, qui est un objet qui contient tous les types bizaroïdes */
+      ref: Category,
+      /* Pour créer une référence vers le model Category  */
       required: true,
     },
     fromUserId: {
       type: Types.ObjectId,
-      ref: user,
+      ref: User,
       required: true,
     },
     toUserId: {
       type: Types.ObjectId,
-      ref: user,
+      ref: User,
       required: true,
     },
   },
@@ -41,6 +42,6 @@ const taskSchema = new Schema(
   }
 );
 
-const task = model("Task", taskSchema);
+const Task = model("Task", taskSchema);
 
-module.exports = task;
+module.exports = Task;

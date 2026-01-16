@@ -58,7 +58,7 @@ const categoryService = {
         // Si aucune catégorie n'a été trouvé, catégorie n'existe pas ==> renvoie FAUX
         return false;
       }
-    } catch {
+    } catch (err) {
       console.log(err);
       throw new Error(err);
     }
