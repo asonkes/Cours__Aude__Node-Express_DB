@@ -1,9 +1,8 @@
 /*************************************************/
 /** Ici on est dans le controller des catégories */
 /*************************************************/
-
+const { Request, Response } = require("express");
 const fakeCategoryService = require("../services/fake/fakeCategory.service");
-
 const categoryService = require("../services/mongo/category.service");
 
 const categoryController = {
@@ -73,7 +72,7 @@ const categoryController = {
       /** Si le nom existe déjà en BD ==> erreur */
       /** Donc si renvoie 'true' */
       const exists = await categoryService.nameAlreadyExists(
-        categoryToAdd.name
+        categoryToAdd.name,
       );
 
       if (exists) {

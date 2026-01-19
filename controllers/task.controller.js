@@ -26,7 +26,7 @@ const taskController = {
   },
 
   /**
-   * Récuopérer une tâche avec un id spécifique
+   * Récupérer une tâche avec un id spécifique
    * @param {Request} req
    * @param {Response} res
    */
@@ -58,13 +58,13 @@ const taskController = {
    * @param {Response} res
    */
   getByUser: async (req, res) => {
-    const userId = req.params.id;
-
     try {
+      const userId = req.params.id;
+      // TODO idéalement, il faudrait utiliser un UserService pour vérifier si l'utilisateur existe vraiment en DB
       const tasksToDo = await taskService.findAssignedTo(userId);
 
       // Ici les tâches que le 'userId' aura donné à quelqu'un
-      const tasksGiven = taskService.findGivenBy(userId);
+      const tasksGiven = await taskService.findGivenBy(userId);
 
       const dataToSend = {
         tasksToDo,
@@ -160,8 +160,6 @@ const taskController = {
    * @param {Response} res
    */
   delete: async (req, res) => {
-    const id = req.params.id;
-
     try {
       const taskToDeleted = await taskService.delete(id);
 
@@ -171,7 +169,7 @@ const taskController = {
           message: `Suppression impossible, la tâche n'existe pas !`,
         });
       } else {
-        res.status(204).json(taskToDeleted);
+        res.status(204);
       }
     } catch (err) {
       res.status(500).json({

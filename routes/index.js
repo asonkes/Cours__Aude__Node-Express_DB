@@ -2,20 +2,24 @@
 /** Ici on est dans le router */
 /******************************/
 
-const router = require('express').Router();
+const router = require("express").Router();
 
-router.get('/', (req, res) => {
-    res.send("Bienvenue sur le router de l'API de cet exercice !", 200);
+router.get("/", (req, res) => {
+  res.send("Bienvenue sur le router de l'API de cet exercice !", 200);
 });
 
 /** Ici je dois importer 'taskRouter' */
-const taskRouter = require('./task.router');
+const taskRouter = require("./task.router");
 /** Et dire que le router va l'utiliser + route */
-router.use('/tasks', taskRouter);
+router.use("/tasks", taskRouter);
 
 /** Ici je dois importer 'categoryRouter */
-const categoryRouter = require('./category.router');
+const categoryRouter = require("./category.router");
 /** Et dire que le router va l'utiliser+ route */
-router.use('/categories', categoryRouter);
+router.use("/categories", categoryRouter);
+
+/** Ici je dois importer 'authRouter' */
+const authRouter = require("./auth.router");
+router.use("/auth", authRouter);
 
 module.exports = router;

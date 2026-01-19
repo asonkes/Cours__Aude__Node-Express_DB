@@ -1,10 +1,23 @@
-const { findById } = require("../../models/category.model");
+const { getByUser } = require("../../controllers/task.controller");
 const Task = require("../../models/task.model");
 
 const taskService = {
   find: async () => {
     try {
-      const tasks = await Task.find();
+      const tasks = await Task.find()
+        .find()
+        .populate({
+          path: "categoryId",
+          select: { id: 1, name: 1, icon: 1 },
+        })
+        .populate({
+          path: "fromUserId",
+          select: { id: 1, firstname: 1, lestname: 1 },
+        })
+        .populate({
+          path: "toUserId",
+          select: { id: 1, firstname: 1, lastname: 1 },
+        });
       return tasks;
     } catch (err) {
       console.log(err);
@@ -13,7 +26,20 @@ const taskService = {
   },
   findById: async (id) => {
     try {
-      const searchedTask = await Task.findById(id);
+      const searchedTask = await Task.findById(id)
+        .findById(id)
+        .populate({
+          path: "categoryId",
+          select: { id: 1, name: 1, icon: 1 },
+        })
+        .populate({
+          path: "fromUserId",
+          select: { id: 1, firstname: 1, lestname: 1 },
+        })
+        .populate({
+          path: "toUserId",
+          select: { id: 1, firstname: 1, lastname: 1 },
+        });
       return searchedTask;
     } catch (err) {
       console.log(err);
@@ -24,9 +50,20 @@ const taskService = {
   /** Les tâches assignées à un utilisateur */
   findAssignedTo: async (userId) => {
     try {
-      const tasks = await Task.find();
-      /** On met task.to ==> voir db => 'fromUserId' */
-      tasks.filter((task) => task.fromUserId === userId);
+      //Trouver toutes les tâches assignées au userId reçu en paramètre
+      const tasks = await Task.find({ toUserId: userId })
+        .populate({
+          path: "categoryId",
+          select: { id: 1, name: 1, icon: 1 },
+        })
+        .populate({
+          path: "fromUserId",
+          select: { id: 1, firstname: 1, lastname: 1 },
+        })
+        .populate({
+          path: "toUserId",
+          select: { id: 1, firstname: 1, lastname: 1 },
+        });
       return tasks;
     } catch (err) {
       console.log(err);
@@ -36,18 +73,38 @@ const taskService = {
 
   /** Les tâches qui seront données par cet utilisateur */
   findGivenBy: async (userId) => {
-    const tasks = await Task.find();
-    /** On met task.to ==> voir db => 'toUserId' */
-    tasks.filter((task) => task.toUserId === userId);
-    return tasks;
+    try {
+      //Trouver toutes les tâches données par le userId reçu en paramètre
+      const tasks = await Task.find({ fromUserId: userId })
+        .populate({
+          path: "categoryId",
+          select: { id: 1, name: 1, icon: 1 },
+        })
+        .populate({
+          path: "fromUserId",
+          select: { id: 1, firstname: 1, lastname: 1 },
+        })
+        .populate({
+          path: "toUserId",
+          select: { id: 1, firstname: 1, lastname: 1 },
+        });
+      return tasks;
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
   },
 
   /** Ici pour créer des tâches */
   create: async (task) => {
     try {
+      // Créer un nouvel objet à partir du model
       const taskToAdd = Task(task);
 
+      // Sauvegarde cet objet en DB
       await taskToAdd.save();
+
+      // Renvoyer l'objet créé
       return taskToAdd;
     } catch (err) {
       console.log(err);
@@ -55,12 +112,36 @@ const taskService = {
     }
   },
 
+  updateStatus: async (id, status) => {},
+
+  update: async (id, task) => {},
+
   delete: async (id) => {
     try {
-      const taskToDeleted = await Task.findByIdAndDelete(id); // retourne {deletedCount: 1}
-      return taskToDeleted;
+      // ? 2 solutions :
+      // #region deleteOne({ })
+      // avec filtre qui renvoie un objet avec une propriété deleteCount dans laquelle il y a le nombre d'éléments supprimés (si c'est 0, c'est qu'aucun élément n'a été trouvé)
+      // const deleteInfo =  await Task.deleteOne( { _id : id });
+
+      // if(deleteInfo.deletedCount === 0) {
+      //     return false;
+      // }
+      // else {
+      //     return true;
+      // }
+      // return deleteInfo.deletedCount !== 0;
+      //#endregion
+
+      //#region findByIdAndDelete(id)
+      // Va d'abord faire la méthode findById pour trouver l'élément et ensuite va supprimer. Cette méthode vous renvoir alors l'élément (ou pas) qui va être supprimé
+      const deletedTask = await Task.findByIdAndDelete(id);
+      if (deletedTask) {
+        return true;
+      } else {
+        return false;
+      }
+      //#endregion
     } catch (err) {
-      await Character.deleteOne({ name: "Eddard Stark" });
       console.log(err);
       throw new Error(err);
     }
