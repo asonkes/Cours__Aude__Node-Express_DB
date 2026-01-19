@@ -15,7 +15,12 @@ const taskController = {
     try {
       // On appelle notre service qui va chercher dans la DB
       const tasks = await taskService.find();
-      res.status(200).json(tasks);
+
+      const dataToSend = {
+        count: tasks.length,
+        tasks,
+      };
+      res.status(200).json(dataToSend);
     } catch (err) {
       console.log(err);
       res.status(500).json({
@@ -31,14 +36,14 @@ const taskController = {
    * @param {Response} res
    */
   getById: async (req, res) => {
-    const id = req.params.id;
     try {
+      const id = req.params.id;
       const task = await taskService.findById(id);
 
       if (!task) {
         res.status(404).json({
           statusCode: 404,
-          message: `La catégorie ${id} n'existe pas`,
+          message: `La tâche ${id} n'existe pas`,
         });
       }
 
@@ -54,16 +59,15 @@ const taskController = {
 
   /**
    * Récupérer les tâches d'un user
-   * @param {Request} req
-   * @param {Response} res
+   * @param { Request } req
+   * @param { Response } res
    */
   getByUser: async (req, res) => {
     try {
       const userId = req.params.id;
-      // TODO idéalement, il faudrait utiliser un UserService pour vérifier si l'utilisateur existe vraiment en DB
-      const tasksToDo = await taskService.findAssignedTo(userId);
+      //TODO Idéalement il faudrait utiliser un userService pour vérifier si l'utilisateur existe vraiment en DB
 
-      // Ici les tâches que le 'userId' aura donné à quelqu'un
+      const tasksToDo = await taskService.findAssignedTo(userId);
       const tasksGiven = await taskService.findGivenBy(userId);
 
       const dataToSend = {
@@ -71,16 +75,9 @@ const taskController = {
         tasksGiven,
       };
 
-      /** On fait ça sous forme d'objet, car on peut pas faire :
-       * res.status(200).json()
-       */
       res.status(200).json(dataToSend);
     } catch (err) {
-      console.log(err);
-      res.status(500).json({
-        statusCode: 500,
-        message: `Erreur dans la DB`,
-      });
+      res.status(500).json({ statusCode: 500, message: "Erreur de la db" });
     }
   },
 
@@ -155,26 +152,26 @@ const taskController = {
   },
 
   /**
-   * Ici on va supprimer une tâche
-   * @param {Request} req
-   * @param {Response} res
+   * Supprime une tâche
+   * @param { Request } req
+   * @param { Response } res
    */
   delete: async (req, res) => {
     try {
-      const taskToDeleted = await taskService.delete(id);
+      const id = req.params.id;
 
-      if (!taskToDeleted) {
+      if (await taskService.delete(id)) {
+        res.sendStatus(204);
+      } else {
         res.status(404).json({
           statusCode: 404,
-          message: `Suppression impossible, la tâche n'existe pas !`,
+          message: "Suppression impossible, la tâche n'existe pas",
         });
-      } else {
-        res.status(204);
       }
     } catch (err) {
       res.status(500).json({
         statusCode: 500,
-        message: `Erreur de la DB`,
+        message: "Erreur db",
       });
     }
   },

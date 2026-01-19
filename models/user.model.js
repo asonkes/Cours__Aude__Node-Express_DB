@@ -12,7 +12,7 @@ const userSchema = new Schema(
       required: true,
       trim: true,
     },
-    Email: {
+    email: {
       type: String,
       required: true,
       trim: true,
@@ -33,7 +33,7 @@ const userSchema = new Schema(
   {
     collection: "User",
     timestamps: true,
-  }
+  },
 );
 
 const User = model("User", userSchema);

@@ -1,18 +1,17 @@
-const { getByUser } = require("../../controllers/task.controller");
 const Task = require("../../models/task.model");
 
 const taskService = {
   find: async () => {
     try {
+      // Populate permet de rajouter les informations reliées à notre objet task grâce à la ref qu'on a établi dans le Schema
       const tasks = await Task.find()
-        .find()
         .populate({
           path: "categoryId",
           select: { id: 1, name: 1, icon: 1 },
         })
         .populate({
           path: "fromUserId",
-          select: { id: 1, firstname: 1, lestname: 1 },
+          select: { id: 1, firstname: 1, lastname: 1 },
         })
         .populate({
           path: "toUserId",
@@ -24,30 +23,29 @@ const taskService = {
       throw new Error(err);
     }
   },
+
   findById: async (id) => {
     try {
-      const searchedTask = await Task.findById(id)
-        .findById(id)
+      const task = await Task.findById(id)
         .populate({
           path: "categoryId",
           select: { id: 1, name: 1, icon: 1 },
         })
         .populate({
           path: "fromUserId",
-          select: { id: 1, firstname: 1, lestname: 1 },
+          select: { id: 1, firstname: 1, lastname: 1 },
         })
         .populate({
           path: "toUserId",
           select: { id: 1, firstname: 1, lastname: 1 },
         });
-      return searchedTask;
+      return task;
     } catch (err) {
       console.log(err);
       throw new Error(err);
     }
   },
 
-  /** Les tâches assignées à un utilisateur */
   findAssignedTo: async (userId) => {
     try {
       //Trouver toutes les tâches assignées au userId reçu en paramètre
@@ -71,7 +69,6 @@ const taskService = {
     }
   },
 
-  /** Les tâches qui seront données par cet utilisateur */
   findGivenBy: async (userId) => {
     try {
       //Trouver toutes les tâches données par le userId reçu en paramètre
@@ -95,7 +92,6 @@ const taskService = {
     }
   },
 
-  /** Ici pour créer des tâches */
   create: async (task) => {
     try {
       // Créer un nouvel objet à partir du model
