@@ -17,7 +17,7 @@ const authController = {
       // On tente d'ajouter l'utilisateur
       const userCreated = await authService.create(userToAdd);
 
-      res.location(`/api/user/${userCreated.id}`);
+      res.location(`/api/user/${userCreated._id}`);
       res.status(201).json({
         id: userCreated._id,
         firstname: userCreated.firstname,
@@ -32,7 +32,27 @@ const authController = {
 
   login: async (req, res) => {
     try {
+      // Récupérer les infos de connection envoyées dans le body
+      const credentials = req.body;
+
+      // essayer de trouver l'utilisateur qui correspond à ce sdonnées
+      const userFound = await authService.findByCredentials(credentials);
+
+      // Si pas d'utilisateur trouvé, les infos de connexion ne sont pas bonnes
+      if (!userFound) {
+        res.status(401).json({
+          statusCode: 401,
+          message: `Les informations de connexion ne sont pas bonnes`,
+        });
+      } else {
+        res.status(200).json({
+          id: userFound._id,
+          firstname: userFound.firstname,
+          lastname: userFound.lastname,
+        });
+      }
     } catch (err) {
+      console.log(err);
       res.sendStatus(500);
     }
   },

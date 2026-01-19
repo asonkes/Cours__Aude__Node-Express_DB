@@ -2,7 +2,35 @@ const argon2 = require("argon2");
 const User = require("../../models/user.model");
 
 const authService = {
-  findByCredentials: async (credentials) => {},
+  findByCredentials: async (credentials) => {
+    try {
+      // Trouver l'utilisateur dont le mail est = à celui reçu, si pas d'utilisateur trouvé, on sort
+      const userFound = await User.findOne({ email: credentials.email });
+
+      if (!userFound) {
+        return undefined;
+      }
+
+      // Si utilisateur trouvé
+      // On va vérifier si le password trouvé correspond à celui hashé dans la db
+      const checkPassword = await argon2.verify(
+        userFound.password,
+        credentials.password,
+      );
+
+      // Si pas, on sort
+      if (!checkPassword) {
+        return undefined;
+      } else {
+        // Si oui, c'est qu'on a le bon mail et le bon password
+        // donc on renvoie l'utilisateur
+        return userFound;
+      }
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
+  },
 
   emailAlreadyExists: async (email) => {
     try {
