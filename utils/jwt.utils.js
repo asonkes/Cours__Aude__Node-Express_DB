@@ -54,7 +54,35 @@ const jwtUtils = {
   },
 
   decode: (token) => {
-    //todo return infoUser
+    return new Promise((resolve, reject) => {
+      // ? 1) Si rien dans paramètre token, promesse non tenue
+      if (!token) {
+        reject(new Error("Pas de token reçu"));
+      }
+
+      // ? 2) S'il y a bien un token, on peut s'occuper de le décoder
+      // Pour ça, on va faire appel à la méthode verify qui prend plusieurs paramètres :
+      // - Le 1er, c'est le token à décoder
+      // Le 2eme, c'est le secret
+      // - Le 3eme, se sont les options
+      // - Le 4eme et dernier paramètre, c'est la fonction qui sera lancée à la fin de la vérification
+      // comme paramètre erreur et payload.
+      const options = {
+        audience: JWT_AUDIENCE,
+        issuer: JWT_ISSUER,
+      };
+
+      jwt.verify(token, JWT_SECRET, options, (error, payload) => {
+        // Si une errer est survenue pendant le décodage error est rempli mais pas payload
+
+        if (error) {
+          reject(error); /* Si erreur, on rejette la promesse */
+        }
+
+        // Si pas d'erreur pendant le décodage, error est vide et payload est rempli avec les claims qu'on avait mis dans le token
+        resolve(payload);
+      });
+    });
   },
 };
 
