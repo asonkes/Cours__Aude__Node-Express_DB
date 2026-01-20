@@ -3,12 +3,21 @@
 /*********************************************/
 
 const taskController = require("../controllers/task.controller");
+// Middleware pour le token
+const authentificationMiddleware = require("../middlewares/auth/authentification.middleware");
 const bodyValidatorMiddleware = require("../middlewares/bodyValidator.middleware");
 
 const taskRouter = require("express").Router();
 
 /** Routes sans besoin 'd'id' */
-taskRouter.route("/").get(taskController.getAll).post(taskController.insert);
+taskRouter
+  .route("/")
+  .get(taskController.getAll)
+  .post(
+    authentificationMiddleware(),
+    bodyValidatorMiddleware(),
+    taskController.insert,
+  );
 
 /** Routes avec 'id' */
 taskRouter
@@ -16,7 +25,7 @@ taskRouter
   .get(taskController.getById)
   .put(bodyValidatorMiddleware(), taskController.update)
   .patch(taskController.updateStatus)
-  .delete(taskController.delete);
+  .delete(bodyValidatorMiddleware(), taskController.delete);
 
 /** Ici c'est pour récupérer les tâches d'un utilisateur */
 taskRouter.route("/user/:name").get(taskController.getByUser);

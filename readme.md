@@ -83,18 +83,18 @@ L'API va toujours renvoyer une réponse qui sera composée de :
     * **5XX** : indiquer une **erreur** de serveur (serveur ne répond pas, db cassée)
 * 📃 **Données** _(optionnel)_ : Certaines requêtes, notamment les GET vont nous renvoyer du json (ou XML, fichiers...)
 
-### Principes d'API REST
+### 📏 Principes d'API REST
 <hr>
 
 Une API REST(Ful) REpresentational State Transfert doit respecter les **principes** suivants :
 
-* **Stateless** (Sans état) : L'API ne **sauvegarde aucune** donnée/état utilisateur. Si besoin d'identifier qui fait la requête, cette information devra être transmise dans la requête (query, headers, cookies)
+* 💾 **Stateless** (Sans état) : L'API ne **sauvegarde aucune** donnée/état utilisateur. Si besoin d'identifier qui fait la requête, cette information devra être transmise dans la requête (query, headers, cookies)
 
-* **Interface Uniforme** : L'API doit utiliser des modèles de données uniformes et cohérents en entrée et en sortie et utiliser les bons Verb.
+* 📄 **Interface Uniforme** : L'API doit utiliser des modèles de données uniformes et cohérents en entrée et en sortie et utiliser les bons Verb.
 
-* **Ressources** : Les données sont vues comme des ressources et les url doivent être parlantes.
+* 🔗 **Ressources** : Les données sont vues comme des ressources et les url doivent être parlantes.
 
-* **Couche & Cache** : L'API devrait idéalement être séparée en plusieurs couches logiques (**architecture**). Les requêtes devraient idéalement être mises en cache.
+* 📚 **Couche & Cache** : L'API devrait idéalement être séparée en plusieurs couches logiques (**architecture**). Les requêtes devraient idéalement être mises en cache.
 
 ## Initialiser un projet Node
 <hr>
@@ -657,15 +657,95 @@ Dans le schema :
 
 <hr>
 
-[...incoming...] 
+### Utiliser ces modèles dans nos services.
+Maintenant que les modèles sont faits, nous avons accès à plusieurs méthodes pour effectuer des actions dans la DB.
+```js
+nomModel.find(); /* permet de trouver tous les éléments correspondant au model */
+
+nomModel.find( { /*ici, filtre*/ } ); /* permet de trouver tous les éléments correspondant au filtre */
+```
+
+```js
+nomModel.findById(id); /* permet de trouver l'élément dont l'id est celui renseigné */
+```
+
+```js
+nomModel.findByOne( { /* ici, filtre */ } ); /* permet de trouver le premier élément dont qui correspond à notre filtre */
+```
+
+```js
+const ressourceCree = nomModel(valeursAAjouter); /* Créé un objet en respectant le schéma du model */
+ressourceCree.save(); /* Sauvegarde cet objet en db */
+```
+
+```js
+nomModel.deleteOne({ /* filtre */ });// Supprime le premier élément qui correspond au filtre et renvoie un objet avec une propriété deletedCount qui contient le nombre d'élément supprimés
+
+nomModel.findByIdAndDelete(id); //Trouve l'élément grâce à l'id et le supprime. Renvoie l'élément trouvé ou null si pas trouvé
+
+nomModel.deleteMany({ /* filtre */ });//Supprime tous les élements qui correspondent au filtre et renvoie un objet avec la prop deletedCount.
+```
+
 
 ## Hasher des données
 
+Nous allons voir comment hasher des données avec l'ajout d'un hash sur le mot de passe des utilisateurs.
+Pour gérer nos utilisateurs, nous faisons souvent la partie création de compte et connexion dans une partie nommée "Auth" pour Authentication. Nous allons donc créer une route auth, un controller auth et un service auth.
+
+Pour hasher, nous aurons besoin d'une librairie de hashage. 
+Nous allons utiliser [Argon2](https://www.npmjs.com/package/argon2).
+
+### Installer Argon2 : 
+Dans votre projet :
+```
+npm i argon2
+```
+
+### Hasher le password
+Dans le service, avant l'ajout de l'utilisateur dans la DB, on va faire :
+```js
+  const hashedPassword = await argon2.hash(user.password);
+```
+
+### Vérification du password 
+Pour vérifier si un mot de passe correspond à la version hashée :
+```js
+   const checkPassword = await argon2.verify(hashedPassword, loginPassword);
+   // si les deux ne correspondent pas, checkPassword sera faux
+```
+
+
 <hr>
+
+## Rajouter l'authentification avec JWT
+[JWT - Json Web Token](https://en.wikipedia.org/wiki/JSON_Web_Token) est le moyen le plus connu et utilisé de créer un jeton qui permet d'identifier qui est actuellement en train de faire la requête.
+
+Cela permettra, sur certaines routes, de mettre en place de la sécurité et de permettre l'accès aux (à la) ressource(s) uniquement à certains utilisateurs.
+
+### Installer jsonwebtoken
+
+### Créer un Token
+
+### Déchiffrer le Token
+
+### Utilisation : Créer des middlewares 
+
+
+<hr> 
+
+[...incoming...] 
 
 ## Gestion des fichiers
 
 
 <hr>
 
-## Rajouter l'authentification avec JWT
+
+
+Utils :
+[Extension TODO+](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-todo-plus)
+Pour gérer les tâches : 
+* ALT + ENTER : Créer une tâche
+* ALT + D : Done (Marquer comme faite)
+* ALT + S : Started (Marquer comme commencée)
+* ALT + C : Cancelled (Marquer comme annulée)
