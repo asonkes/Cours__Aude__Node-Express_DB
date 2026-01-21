@@ -1,10 +1,49 @@
 const Task = require("../../models/task.model");
 
 const taskService = {
-  find: async () => {
+  find: async (query) => {
     try {
+      // ? Récupérer ce qu'on a reçu dans la query, pour rajouter des filtres de recherche
+      // Query ca va être un objet avec plein de propriétés
+      // Exemple ==> barre de recherche sur internet où on veut que des vêtements de fille ou garçon
+      // En fonciton de la demande (l'url va être modifiée) >>> et l'url va correspondre à notre demande !!!
+      const { isDone, categoryId } = query;
+      // * Vérifier si 'isDone' est bien présent dans la 'query' pour créer un nouveau 'filtre'
+      let isDoneFilter;
+
+      if (isDone === undefined) {
+        isDoneFilter = {};
+      } else {
+        // On peut mettre : isDoneFilter = { isDone }
+        // isDoneFilter = {isDone(nomChampdeLaDB) : isDone(nomVariableAvec ValeurRecherchee)}
+        isDoneFilter = { isDone };
+        // ou // isDoneFilter = {isDone}
+      }
+
+      // Vérifier s'il y a des catégories dans la query
+      let categoryFilter;
+      // Si pas reçu de categoryId dans la query, filtre vide
+      if (!categoryId) {
+        categoryFilter = {};
+      }
+      // Sinon, commme on pourrait rechercher plusieurs catégories
+      // On va ergarder si c'ets un tableau
+      else if (Array.isArray(categoryId)) {
+        //{nomChampsEnDb : { $in : [valeurs recherchée ]}}
+        //catégoryFilter = {categoryId : {$in : categoryId}};
+        categoryFilter = { categoryId: { $in: categoryId } };
+      }
+      // Si pas tableau, on cherche une seule catégorie
+      else {
+        // Ou on peut écrire : categoryFilter = {categoryId}
+        categoryFilter = { categoryId: categoryId };
+      }
+
       // Populate permet de rajouter les informations reliées à notre objet task grâce à la ref qu'on a établi dans le Schema
-      const tasks = await Task.find()
+      const tasks = await Task.find(isDoneFilter)
+        // On peut pas mettre 2 filtre les uns à côté des autres
+        // Donc si on en a 2, on met "and" en bas avec le 2eme filtre
+        .and(categoryFilter)
         .populate({
           path: "categoryId",
           select: { id: 1, name: 1, icon: 1 },

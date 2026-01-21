@@ -12,9 +12,15 @@ const taskController = {
    * @param {Response} res
    */
   getAll: async (req, res) => {
+    // Query même si on n'en a pas, sera toujours un objet vide mais donc il existe !!!
+    //
+    const query = req.query;
+    console.log(query);
+
     try {
       // On appelle notre service qui va chercher dans la DB
-      const tasks = await taskService.find();
+      // On met la 'query' en paramètre
+      const tasks = await taskService.find(query);
 
       const dataToSend = {
         count: tasks.length,
