@@ -6,7 +6,7 @@ const taskService = {
       // ? Récupérer ce qu'on a reçu dans la query, pour rajouter des filtres de recherche
       // Query ca va être un objet avec plein de propriétés
       // Exemple ==> barre de recherche sur internet où on veut que des vêtements de fille ou garçon
-      // En fonciton de la demande (l'url va être modifiée) >>> et l'url va correspondre à notre demande !!!
+      // En fonction de la demande (l'url va être modifiée) >>> et l'url va correspondre à notre demande !!!
       const { isDone, categoryId } = query;
       // * Vérifier si 'isDone' est bien présent dans la 'query' pour créer un nouveau 'filtre'
       let isDoneFilter;

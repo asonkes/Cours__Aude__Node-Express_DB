@@ -17,10 +17,12 @@ const userSchema = new Schema(
       required: true,
       trim: true,
       unique: true,
+      select: false,
     },
     password: {
       type: String,
       required: true,
+      select: false,
     },
     role: {
       type: String,
@@ -28,6 +30,7 @@ const userSchema = new Schema(
       enum: ["User", "Admin"], // enum permet de donner une liste de châines autorisées, si on encode autre chos e-> erreur
       default:
         "User" /** default permet de mettre une liste de chaînes autorisées, si on encode autre chose -> erreur */,
+      select: false,
     },
   },
   {

@@ -29,7 +29,7 @@ const taskController = {
       res.status(200).json(dataToSend);
     } catch (err) {
       console.log(err);
-      res.status(500).json({
+      res.status({
         statusCode: 500,
         message: `Erreur de la DB`,
       });
