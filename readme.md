@@ -543,7 +543,7 @@ Sélectionnez votre fichier insomnia (ou postman), appuyez sur Scan et tada, vot
 
 <hr>
 
-## Connecter son API avec une DB
+## 💾 Connecter son API avec une DB
 
 Pour connecter notre API à une base de données, nous allons utiliser un ORM (Object-Relational Mapping) ou ODM (Object-Document Mapping). Il s'agit d'un outil (généralement une librairie) où la connection est facilitée et les requêtes aussi. Cet outil nous permettra aussi très facilement de transformer nos objets js en model de donnée et inversement.
 
@@ -654,9 +654,6 @@ Dans le schema :
     }
     ```
 
-
-<hr>
-
 ### Utiliser ces modèles dans nos services.
 Maintenant que les modèles sont faits, nous avons accès à plusieurs méthodes pour effectuer des actions dans la DB.
 ```js
@@ -686,8 +683,9 @@ nomModel.findByIdAndDelete(id); //Trouve l'élément grâce à l'id et le suppri
 nomModel.deleteMany({ /* filtre */ });//Supprime tous les élements qui correspondent au filtre et renvoie un objet avec la prop deletedCount.
 ```
 
+<hr>
 
-## Hasher des données
+## 🤫 Hasher des données
 
 Nous allons voir comment hasher des données avec l'ajout d'un hash sur le mot de passe des utilisateurs.
 Pour gérer nos utilisateurs, nous faisons souvent la partie création de compte et connexion dans une partie nommée "Auth" pour Authentication. Nous allons donc créer une route auth, un controller auth et un service auth.
@@ -717,18 +715,87 @@ Pour vérifier si un mot de passe correspond à la version hashée :
 
 <hr>
 
-## Rajouter l'authentification avec JWT
+## 🪙 Rajouter l'authentification avec JWT
 [JWT - Json Web Token](https://en.wikipedia.org/wiki/JSON_Web_Token) est le moyen le plus connu et utilisé de créer un jeton qui permet d'identifier qui est actuellement en train de faire la requête.
 
 Cela permettra, sur certaines routes, de mettre en place de la sécurité et de permettre l'accès aux (à la) ressource(s) uniquement à certains utilisateurs.
 
 ### Installer jsonwebtoken
+Pour installer la librairie [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken), tapez dans la console du projet :
+```
+npm i jsonwebtoken
+```
 
 ### Créer un Token
+Avec la librairie jsonwebtoken nous avons accès à une méthode pour créer un token.
+```js
+    jwt.sign(payload, JWT_SECRET, options, (error, token) => {});
+```
+Cette méthode, sign, a plusieurs paramètres : 
+* **payload**, le 1er paramètre, est un objet contenant les informations qu'on veut stocker dans le token.
+* **JWT_SECRET**, le 2ème paramètre, est une variable d'environnement contenant le code secret qui sert à encoder et décoder le token. (⚠️ : Pensez à bien le mettre dans vos variables d'env, il ne doit jamais être divulgué)
+* **options**, le 3ème paramètre, est un objet qui contient les paramètres d'encodage du token avec le type d'encodage, la date d'expiration etc
+* **Un callback**, le 4ème paramètre, qui est une fonction déclenchée lors de la signature du token. Cette fonction possède 2 paramètres, le premier contient une erreur s'il y en a une, le deuxième contient le token si pas d'erreur.
+
+### Envoyer le token avec la requête
+Un token, s'envoie lors d'une requête en l'ajoutant dans les **headers**. Quand on sera en React, on ajoutera nous même aux headers de la requête, ce fameux token qu'on aura stocké au préalable dans le navigateur. Le header dans lequel il faut ajouter le token s'appelle _Authorization_.
+
+Sur Insomnia, il y a un bouton tout prêt qui permet d'ajout le token dans les headers de la requête.
+
+Cliquer sur le bouton Auth :
+<div align="center">
+<img src="./documentation/token_insomnia1.png" />
+</div>
+
+Sélectionner Bearer Token dans la liste :
+<div align="center">
+<img src="./documentation/token_insomnia2.png" />
+</div>
+
+On copie son token :
+<div align="center">
+<img src="./documentation/token_insomnia3.png" />
+</div>
+
+### Création de middlewares pour récupérer le token
+On va créer un middleware pour chaque vérification qu'on veut faire. Par exemple : 
+* **authentication** : Vérifier si le token est envoyé donc, vérifie si l'utilisateur est bien connecté (ex : on ne peut pas ajouter de tâches si on est pas connecté)
+* **userAuthorization** : Vérifier si dans le token, l'id de l'utilisateur lui permet de faire ce qu'il demande
+* **roleAuthorization** : Vérifier si l'utilisateur possède le bon rôle pour faire ce qu'il demande
+
+_ex : Création d'un authenticationMiddleware_
+```js
+const authenticationMiddleware = () => {
+
+    return (req, res, next) => {
+
+    }
+}
+
+module.exports = authenticationMiddleware;
+```
+
+On va ensuite aller activer ces différents middleware sur les routes qui en ont besoin.
+_ex : Dans le fichier de route des task_
+```js
+const authenticationMiddleware = require('../middlewares/auth/authentication.middleware');
+
+taskRouter.route('/')
+    .get(taskController.getAll)
+    .post(authenticationMiddleware(), bodyValidatorMiddleware() , taskController.insert)
+```
 
 ### Déchiffrer le Token
+Pour décoder un token nous avons à notre disposition une méthode verify() :
+```js
+    jwt.verify(token, JWT_SECRET, options, (error, payload) => {})
 
-### Utilisation : Créer des middlewares 
+```
+Cette méthode a plusieurs paramètres : 
+* Le premier, c'est le **token** à décoder
+* Le deuxième, c'est le **secret**
+* Le troisième, ce sont les **options**
+* Le quatrième et dernier, c'est la **fonction (callback)** qui sera lancée à la fin de la vérification avec comme paramètre erreur et payload
 
 
 <hr> 
@@ -736,16 +803,30 @@ Cela permettra, sur certaines routes, de mettre en place de la sécurité et de 
 [...incoming...] 
 
 ## Gestion des fichiers
-
-
 <hr>
 
+## Validation des données entrantes
+<hr>
 
+## Mise en place de Swagger
+<hr>
 
-Utils :
-[Extension TODO+](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-todo-plus)
+## Bonus
+### Utilitaires : 
+
+L'extension VSC [TODO+](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-todo-plus) vous permet de faire des todo list.
 Pour gérer les tâches : 
 * ALT + ENTER : Créer une tâche
 * ALT + D : Done (Marquer comme faite)
 * ALT + S : Started (Marquer comme commencée)
 * ALT + C : Cancelled (Marquer comme annulée)
+
+### Librairies sympa pour pimper votre API
+
+[http-status-code](https://www.npmjs.com/package/http-status-codes) est une librairie contenant une énumération des status Http pour gérer plus facilement les réponses de l'API.
+Une fois que vous l'aurez installé, dans votre code, vous aurez l'auto-complétion qui proposera les codes possibles avec un nom plus clair que juste un nombre.\
+_ex :_
+```js
+res.status(StatusCodes.OK).json(/* Ce que vous renvoyez */)
+```
+
