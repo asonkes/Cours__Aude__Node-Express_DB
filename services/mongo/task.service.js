@@ -27,7 +27,7 @@ const taskService = {
         categoryFilter = {};
       }
       // Sinon, commme on pourrait rechercher plusieurs catégories
-      // On va ergarder si c'ets un tableau
+      // On va regarder si c'est un tableau
       else if (Array.isArray(categoryId)) {
         //{nomChampsEnDb : { $in : [valeurs recherchée ]}}
         //catégoryFilter = {categoryId : {$in : categoryId}};
