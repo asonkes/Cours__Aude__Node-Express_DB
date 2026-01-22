@@ -63,6 +63,19 @@ const categoryService = {
       throw new Error(err);
     }
   },
+
+  isUsed: async (id) => {
+    try {
+      // On essaie de récupérer un moins une tâche qui a cet id comme categoryId
+      const task = await Task.findOne({ categoryId: id });
+      //Si pas de tâche, aucune n'est liée à cette catégorie donc on renvoie faux, elle n'es pas utilisée
+      if (!task) return false;
+      //Si y'a une tâche, au moins une est reliée donc on renvoie vrai
+      else return true;
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
 };
 
 module.exports = categoryService;

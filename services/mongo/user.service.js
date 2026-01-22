@@ -3,23 +3,34 @@ const User = require("../../models/user.model");
 const userService = {
   find: async (query) => {
     try {
-      const { firstname } = query;
+      const { search } = query;
 
-      /** Vérifier si "firstname est bien présent pour créer un filtre */
+      let searchFilter;
       let firstnameFilter;
+      let lastnameFilter;
 
-      if (firstname === undefined) {
+      if (!search) {
         firstnameFilter = {};
+        lastnameFilter = {};
       } else {
-        firstnameFilter = { firstname };
+        searchFilter = { $regex: new RegExp(search, "i") };
+        // new RegExp(search, 'i') va créer une regex
+        // ex : si dans search il y a "au" -> /au/i
+
+        firstnameFilter = { firstname: searchFilter };
+        // { firstname : { $regex : new RegExt(search, 'i') } }
+        lastnameFilter = { lastname: searchFilter };
+        // { lastname : { $regex : new RegExt(search, 'i') } }
       }
 
-      const users = await User.find({
-        firstname: { $regex: new RegExp("au", "i") },
-      });
+      console.log(firstnameFilter);
+      console.log(lastnameFilter);
+
+      const users = await User.find()
+        .or([firstnameFilter, lastnameFilter])
+        .select(["_id", "firstname", "lastname", "createdAt", "updatedAt"]);
       return users;
     } catch (err) {
-      console.log(err);
       throw new Error(err);
     }
   },
